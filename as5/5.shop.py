@@ -1,60 +1,54 @@
 import csv
 
-PRODUCTS=[]       #   list of dicts
-
-def load_data():
-    product_dict={}
-    print('Stock :')
-    with open ('database.csv') as f:
-        reader=csv.reader(f)
-        for line in reader:
-            product_dict={'code':line[0],'name':line[1], \
-                          'price':line[2],'count':line[3]}
-            #info = line[:-1].split(',')
-            #product_dict={'code':info[0],'name':info[1], \
-                          #'price':info[2],'count':info[3]}
-            
-            PRODUCTS.append(product_dict)
-    print('---------------------------------------------------------')
-        #print(PRODUCTS)
-            #print(info)
-            #print(line,end='')
+PRODUCTS=[]       
 
 
 def show_menu():
     print('1. Add\n2. Edit\n3. Delete\n4. Show List\n'\
           '5. Search\n6. Buy\n7. Save & Exit\n')
 
+    
+def load_data():
+    product_dict={}
+    
+    with open ('database.csv') as f:
+        reader=csv.reader(f)
+        for line in reader:
+            product_dict={'code':line[0],'name':line[1], \
+                          'price':line[2],'count':line[3]}
+            PRODUCTS.append(product_dict)     
+
+            
+def show_list():
+    print('Stock :')
+    print("{:<9} {:<13} {:<12} {:<11}".format('ID','Name','Price','Count'))
+    for product in PRODUCTS:
+        print ("{:<9} {:<13} {:<12} {:<11}".format(product['code'],product['name'],\
+              product['price'],product['count']))
+        
+    print('--------------------------------------------------------')
+
+
+
+
 def add():
-    print('Adding Products ')
+    print('Adding Products ... ')
     new_product={'code':input('Product Code : '),'name':input('Product Name : '),
-                'price':input('Product Price : '),'count':input('Product Count : ')}
-    print(new_product)
+                 'price':input('Product Price : '),'count':input('Product Count : ')}
     ex=0
-    with open ('database.csv','a',newline='') as fa:
-        writer=csv.DictWriter(fa,fieldnames=['code','name','price','count'])
-        for product in PRODUCTS:
-            if new_product['code'] == product['code'] or new_product['name'] == product['name'] :         
-                ex=1
-                print('Product Already Exists! You Can Edit It')
-                return
-            else :
-                #writer=csv.DictWriter(fa,fieldnames=['code','name','price','count'])
-                writer.writerow(new_product)
-                print('--- Product Added ---')
-                return
-'''  
-   ex=1
-        for k,v in new_product.items():
-            if v not in PRODUCTS:
-                writer.write((v,','))
-            else :
-                print('Product Already Exists! You Can Edit It.')
-                ex=0
- '''
+    for product in PRODUCTS:
+        if new_product['code'] == product['code'] or new_product['name'] == product['name']  :
+            ex=1
+            print('Product With This Code or Name is Already Exists! You Can Edit It')
+            break
+    if ex==0 :
+        PRODUCTS.append(new_product)
+        print('--- Product Added ---')
+    
+
                  
 def edit():
-    print('Editing Products')
+    print('Editing Products ...')
     edit_name=input('Product Name : ')
     in_stock=False
     index=0
@@ -66,116 +60,148 @@ def edit():
             index+=1
     if in_stock:
         while True :
-            choice=int(input('Edit\n1. Code\n2. Name\n3. Price\n4. Count/n5. Quit Edit'))
+            choice=int(input('Which Part of Product You Want to Edit ?\n1. Code\n2. Name\n3. Price\n4. Count\n5. Quit Edit\n'))
             if choice==1:
-                new_code=inout('New Code : ')
+                new_code=input('New Code : ')
                 PRODUCTS[index]['code']=new_code
-                with open ('database.csv','w',newline='') as fa:
-                    writer=csv.DictWriter(fa,fieldnames=['code','name','price','count'])
-                    for product in PRODUCTS:
-                        writer.writerow(product)
+
             elif choice==2:
-                new_name=inout('New Name : ')
+                new_name=input('New Name : ')
                 PRODUCTS[index]['name']=new_name
-                with open ('database.csv','w',newline='') as fa:
-                    writer=csv.DictWriter(fa,fieldnames=['code','name','price','count'])
-                    for product in PRODUCTS:
-                        writer.writerow(product)
+    
+            
             elif choice==3:
-                new_price=inout('New Price : ')
+                new_price=input('New Price : ')
                 PRODUCTS[index]['price']=new_price
-                with open ('database.csv','w',newline='') as fa:
-                    writer=csv.DictWriter(fa,fieldnames=['code','name','price','count'])
-                    for product in PRODUCTS:
-                        writer.writerow(product)
+
             elif choice==4:
-                new_code=inout('New Count : ')
+                new_count=input('New Count : ')
                 PRODUCTS[index]['count']=new_count
-                with open ('database.csv','w',newline='') as fa:
-                    writer=csv.DictWriter(fa,fieldnames=['code','name','price','count'])
-                    for product in PRODUCTS:
-                        writer.writerow(product)
+
             elif choice==5:
                 print('--- Edit Saved ---')
                 break
             else :
                 print('Choose Between 1 and 5')
-        else:
+    else:
             print('Product is Out of Stock! You Can Add It.')
                     
         
     
 
 def delete():
-    print('Deleting Products')
-    delete_name=input('Product Name')
+    print('Deleting Product ...')
+    delete_name=input('Product Name : ')
     for i in range(0,len(PRODUCTS)):
         if PRODUCTS[i]['name']==delete_name:
             del PRODUCTS[i]
+            print('--- Product Deleted ---')
             break
+    else :
+        print('Product is Out of Stock!')
+
             
-    with open ('database.csv','w',newline='') as fd:
-                    writer=csv.DictWriter(fd,fieldnames=['code','name','price','count'])
-                    for product in PRODUCTS:
-                        writer.writerow(product)
-            
-    
-
-
-def show_list():
-    #print('ID\tName\tPrice\tCount')
-    print("{:<9} {:<13} {:<12} {:<11}".format('ID','Name','Price','Count'))
-    #for product in PRODUCTS :
-        #print(product['code'],'\t',product['name'],'\t',\
-              #product['price'],'\t',product['count'])
-    for product in PRODUCTS:
-        print ("{:<9} {:<13} {:<12} {:<11}".format(product['code'],product['name'],\
-              product['price'],product['count']))
-        #for k, v in product.items():
-            #cod, nam, pric, cnt = v
-            #print ("{:<9} {:<11} {:<12} {:<11}".format(cod, nam, pric, cnt))
-        #print ("{:<9} {:<11} {:<12} {:<11}".format(v))
-        #print(product)
-
                
 def search():
-    print('Searching Product ')
+    print('Searching Product ... ')
     search_name=input('Product Name : ')
     for i in range(0,len(PRODUCTS)):
         if PRODUCTS[i]['name']==search_name:
             print('Product Found!')
             for k,v in PRODUCTS[i].items():
                 print(k.upper(),' : ',v,end='  |  ')
+            print()
+            break
+    else :
+        print('Product is Out of Stock!')
 
-                
+
+        
 def buy():
-    print('Shopping')
+    print('Shopping ...')
     basket=[]
-    
+    quan=[]
+    final_cost=0
     while True:
-        choice = int(input('1. Buy Product\n2. Show Basket\n3. Quit\n'))
+        choice = int(input('1. Buy Product\n2. Show Basket\n3. Quit\nChioce : '))
         if choice==1:
             buy_name=input('Product Name : ')
             for product in PRODUCTS:
                 if product['name']==buy_name:
-                    qty=int(input('Quantity : '))
-                    
+                    qty=-1
+                    while qty<=0:
+                        qty=int(input('Quantity : '))
+                    if qty>int(product['count']):
+                        print('Only ',product['count'],' Left in Stock!')
+                        break
+                    else:
+                        quan.append(qty)
+                        basket.append({'code':product['code'],'name':product['name'], \
+                                       'price':product['price'],'count':product['count']})
+                        product['count']=str(int(product['count'])-qty)
+                        final_cost+=int(product['price'])*qty
+                        break
+            else :
+                print('Sorry! Product is Out of Stock.')
+                        
+                        
+        elif choice==2:
+            
+            print("{:<9} {:<13} {:<12} {:<11}".format('ID','Name','Price','Quantity'))
+            if final_cost==0:
+                print('Your Basket is Empty!')
+            i=0
+            for product in basket :
+                print ("{:<9} {:<13} {:<12} {:<11}".format(product['code'],product['name'],\
+                       product['price'],quan[i]))
+                i+=1
+            print('Final Cost : ',final_cost)
+        
+        elif choice==3:
+            print('--- End Shopping ---')
+            break
+        
+        else :
+            print('Choose Between 1 and 3')
 
-    
+def save():
+    with open ('database.csv','w',newline='') as fd:
+        writer=csv.DictWriter(fd,fieldnames=['code','name','price','count'])
+        for product in PRODUCTS:
+            writer.writerow(product)
+    print('Successfully Saved\nGood Luck')
+
 
     
 load_data()
-show_list()
-#show_menu()
-add()
-#add()
-#add()
-delete()
-print(PRODUCTS)
+
 while True:
-    break
+    #break
     show_menu()
-    choice=int(input('Enter Your Choice : '))
+    sel=int(input('Enter Your Choice : '))
     
+    if sel==1:
+        add()
+    
+    elif sel==2:
+        edit()
+        
+    elif sel==3:
+        delete()
+        
+    elif sel==4:
+        show_list()
+        
+    elif sel==5:
+        search()
+        
+    elif sel==6:
+        buy()
+        
+    elif sel==7:
+        save()
+        break
+    else:
+        print('Choose Between 1 and 7')
     
     
