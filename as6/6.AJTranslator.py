@@ -3,7 +3,7 @@ import os
 WORDS=[]
 
 def load_data():
-    if os.path.exists("wordss_bank.txt"):
+    if os.path.exists("words_bank.txt"):
         with open ('words_bank.txt') as f:
             big_text=f.read()
             lines=big_text.split('\n')
