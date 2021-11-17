@@ -1,4 +1,3 @@
-
 class fraction:
     def __init__(self,numerator,denominator):
         self.n=numerator
