@@ -28,10 +28,6 @@ class Fraction:
 while True:
     print('1.ADD\n2.SUB\n3.MUL\n4.DIV\n5.Simplify\n6.Exit')
     choice=int(input('Chioce : '))
-#     fn,fd=input('First Fraction : ').split('/')
-#     f1=Fraction(int(fn),int(fd))
-#     fn,fd=input('Second Fraction : ').split('/')
-#     f2=Fraction(int(fn),int(fd))
     if choice==1:
         fn,fd=input('First Fraction : ').split('/')
         f1=Fraction(int(fn),int(fd))
