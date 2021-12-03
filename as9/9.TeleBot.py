@@ -9,7 +9,7 @@ from khayyam import JalaliDatetime
 
 # @AjQ1_bot
 
-bot = telebot.TeleBot("5066372662:AAF8QUAOoItPLAuZmWmWLlOy99LjzpHFaOs")
+bot = telebot.TeleBot("TOKEN")
 
 
 
@@ -18,17 +18,12 @@ def wellcome(message):
     bot.reply_to(message, "Wellcome " + message.from_user.first_name)
 
 
-#number=0
-#test=None
-# def generate_random_number():
-#     global random_number
-#     random_number = random.randint(1, 10)
+
 number=0
 markup=''
 @bot.message_handler(commands=['game'])
 def game(message):
     global number
-    #generate_random_number()
     number = random.randint(0, 10)
     user_input = bot.send_message(message.chat.id, 'Random number choosed between 0-10. Now you can guess number : ')
     bot.register_next_step_handler(user_input, gameplay)
@@ -38,13 +33,10 @@ def gameplay(user_input):
     itembtn = telebot.types.KeyboardButton('New Game')
     markup.add(itembtn)
     global number
-    #global markup
     if user_input.text == 'New Game':
-        #generate_random_number()
         number = random.randint(0, 10)
         user_input=bot.send_message(user_input.chat.id, 'New game started. Now you can guess number : ',reply_markup=markup)
         bot.register_next_step_handler(user_input, gameplay)
-        #gameplay(user_input)
 
     elif int(user_input.text) == number:
         user_input = bot.send_message(user_input.chat.id, 'Congradulation! you guessed it right🏆',reply_markup=markup)
@@ -84,7 +76,6 @@ def voice_generator(message):
 
 def text2voice(message):
     try:
-        #my_text = message.text
         language='en'
         vo=gTTS(text=message.text, lang=language, slow=False)
         vo.save("vo.mp3")
