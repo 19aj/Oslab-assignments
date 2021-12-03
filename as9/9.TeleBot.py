@@ -3,7 +3,6 @@ import datetime
 from os import error
 import telebot
 import qrcode
-#import gtts
 from gtts import gTTS
 from khayyam import JalaliDatetime
 
@@ -11,13 +10,9 @@ from khayyam import JalaliDatetime
 
 bot = telebot.TeleBot("TOKEN")
 
-
-
 @bot.message_handler(commands=['start'])
 def wellcome(message):
     bot.reply_to(message, "Wellcome " + message.from_user.first_name)
-
-
 
 number=0
 markup=''
@@ -49,7 +44,6 @@ def gameplay(user_input):
         user_input = bot.send_message(user_input.chat.id, 'Guess bigger number⬆️',reply_markup=markup)
         bot.register_next_step_handler(user_input,gameplay)
         
-
 @bot.message_handler(commands=['age'])
 def age(message):
     date = bot.send_message(message.chat.id, 'Enter your date of birth in shamsi like 1378/10/19')
@@ -67,8 +61,6 @@ def age_calculator(message):
         age = bot.send_message(message.chat.id,'Enter your date of birth like sample.')
         bot.register_next_step_handler(dob,age_calculator)
 
-
-
 @bot.message_handler(commands=['voice'])
 def voice_generator(message):
     text=bot.send_message(message.chat.id,'Enter text in english like : welcome to my bot')
@@ -85,8 +77,6 @@ def text2voice(message):
         text = bot.send_message(message.chat.id,'Enter text like sample')
         bot.register_next_step_handler(text,text2voice)
 
-
-
 @bot.message_handler(commands=['max'])
 def max_number(message):
     array=bot.send_message(message.chat.id, 'Enter numbers like 1,2,4,8')
@@ -100,8 +90,6 @@ def find_max(message):
     except:
         array = bot.send_message(message.chat.id,'Enter numbers like sample')
         bot.register_next_step_handler(array,max_number)     
-
-
 
 @bot.message_handler(commands=['argmax'])
 def argmax(message):
@@ -117,7 +105,6 @@ def find_argmax(message):
             array=bot.send_message(message.chat.id,'Enter numbers like sample')
             bot.register_next_step_handler(array,argmax)       
 
-
 @bot.message_handler(commands=['qrcode'])
 def qrCode(message):
     text=bot.send_message(message.chat.id, 'Enter your text')
@@ -128,7 +115,6 @@ def qrcode_generator(message):
     qr=open('QrCode.png','rb')
     bot.send_photo(message.chat.id,qr)
     
-
 @bot.message_handler(commands=['help'])
 def help(message):
     bot.reply_to(message,"""
