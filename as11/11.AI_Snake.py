@@ -1,12 +1,8 @@
 import random
 import arcade
 
-
-
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 500
-
-
 
 class Snake(arcade.Sprite):
     def __init__(self):
@@ -56,7 +52,6 @@ class Snake(arcade.Sprite):
             arcade.draw_rectangle_filled(self.body[i][0], self.body[i][1], self.width, self.height, self.color)
 
 
-
 class Apple(arcade.Sprite):
     def __init__(self):
         super().__init__()
@@ -76,7 +71,6 @@ class Apple(arcade.Sprite):
 
     def draw(self):
         arcade.draw_circle_filled(self.center_x, self.center_y, self.radius, self.color)
-
 
 
 class Pear(arcade.Sprite):
@@ -99,7 +93,6 @@ class Pear(arcade.Sprite):
         arcade.draw_circle_filled(self.center_x, self.center_y, self.radius, self.color)
 
 
-
 class Poop(arcade.Sprite):
     def __init__(self):
         super().__init__()
@@ -118,7 +111,6 @@ class Poop(arcade.Sprite):
 
     def draw(self):
         arcade.draw_triangle_filled(self.center_x + 10, self.center_y, self.center_x - 10, self.center_y, self.center_x , self.center_y + 20, self.color)
-
 
 
 class Game(arcade.Window):
@@ -171,7 +163,6 @@ class Game(arcade.Window):
         elif key == arcade.key.DOWN:
             self.snake.change_x = 0
             self.snake.change_y = -1
-
 
     
 my_game = Game()
