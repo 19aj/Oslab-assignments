@@ -34,6 +34,7 @@ class Enemy(arcade.Sprite):
         self.width = 48
         self.height = 48
         self.speed = 4
+        self.angle = 180
         self.bullet_list = []
 
     def move(self):
