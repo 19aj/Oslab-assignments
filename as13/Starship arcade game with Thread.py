@@ -4,7 +4,6 @@ import math
 import threading
 import arcade
 
-
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 700
 
