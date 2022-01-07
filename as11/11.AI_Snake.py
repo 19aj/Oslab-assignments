@@ -1,40 +1,38 @@
 import random
+import math
 import arcade
 
-SCREEN_WIDTH = 500
-SCREEN_HEIGHT = 500
+SCREEN_WIDTH = 700
+SCREEN_HEIGHT = 700
 
 class Snake(arcade.Sprite):
     def __init__(self):
         super().__init__()
         self.width = 16
         self.height = 16
-        self.color = arcade.color.BLACK
+        self.speed = 2
         self.change_x = 0
         self.change_y = 0
         self.center_x = SCREEN_WIDTH // 2
         self.center_y = SCREEN_HEIGHT // 2
-        self.score = 1
-        self.speed = 4
+        self.score = 0
         self.body = []
-
+        self.color1 = arcade.color.BLACK
+        self.color2 = arcade.color.GRAY
 
     def move(self):
         self.body.append([self.center_x, self.center_y])
-
         if len(self.body) > self.score:
             self.body.pop(0)
-        
+
         if self.change_x > 0:
             self.center_x += self.speed
         elif self.change_x < 0:
             self.center_x -= self.speed
-
         if self.change_y > 0:
             self.center_y += self.speed
         elif self.change_y < 0:
             self.center_y -= self.speed
-
 
     def eat(self, food):
         if food == "apple":
@@ -44,34 +42,31 @@ class Snake(arcade.Sprite):
         elif food == "poop":
             self.score -= 1
 
-
     def draw(self):
-        arcade.draw_rectangle_filled(self.center_x, self.center_y, self.width, self.height, self.color)
-
+        
         for i in range(len(self.body)):
-            arcade.draw_rectangle_filled(self.body[i][0], self.body[i][1], self.width, self.height, self.color)
-
+            if i % 2 == 0 :
+                arcade.draw_rectangle_filled(self.body[i][0], self.body[i][1], self.width, self.height, self.color2)
+            else :
+                arcade.draw_rectangle_filled(self.body[i][0], self.body[i][1], self.width, self.height, self.color1)
+        arcade.draw_rectangle_filled(self.center_x, self.center_y, self.width, self.height, self.color1)
 
 class Apple(arcade.Sprite):
     def __init__(self):
         super().__init__()
         self.width = 16
         self.height = 16
-        self.color = arcade.color.RED
         self.radius = 8
-        
-
+        self.color = arcade.color.RED
         self.snake = Snake()
-        temp_x = random.randint(0, SCREEN_WIDTH)
-        temp_y = random.randint(0, SCREEN_HEIGHT)
-        if not any ([temp_x, temp_y] for part in self.snake.body):
+        temp_x = random.randint(4, SCREEN_WIDTH)
+        temp_y = random.randint(4, SCREEN_HEIGHT)
+        if not (temp_x in self.snake.body or temp_y in self.snake.body ) :
             self.center_x = temp_x
             self.center_y = temp_y
 
-
     def draw(self):
         arcade.draw_circle_filled(self.center_x, self.center_y, self.radius, self.color)
-
 
 class Pear(arcade.Sprite):
     def __init__(self):
@@ -80,18 +75,14 @@ class Pear(arcade.Sprite):
         self.height = 16
         self.color = arcade.color.YELLOW
         self.radius = 8
-
         self.apple = Apple()
-        temp_x = random.randint(0, SCREEN_WIDTH)
-        temp_y = random.randint(0, SCREEN_HEIGHT)
+        temp_x = random.randint(4, SCREEN_WIDTH)
+        temp_y = random.randint(4, SCREEN_HEIGHT)
         if temp_x != self.apple.center_x or temp_y != self.apple.center_y:
             self.center_x = temp_x
             self.center_y = temp_y
-
-
     def draw(self):
         arcade.draw_circle_filled(self.center_x, self.center_y, self.radius, self.color)
-
 
 class Poop(arcade.Sprite):
     def __init__(self):
@@ -100,15 +91,12 @@ class Poop(arcade.Sprite):
         self.height = 16
         self.color = arcade.color.BROWN
         self.radius = 8
-
         self.pear = Pear()
         temp_x = random.randint(0, SCREEN_WIDTH)
         temp_y = random.randint(0, SCREEN_HEIGHT)
         if temp_x != self.pear.center_x or temp_y != self.pear.center_y:
             self.center_x = temp_x
             self.center_y = temp_y
-
-
     def draw(self):
         arcade.draw_triangle_filled(self.center_x + 10, self.center_y, self.center_x - 10, self.center_y, self.center_x , self.center_y + 20, self.color)
 
@@ -122,22 +110,19 @@ class Game(arcade.Window):
         self.pear = Pear()
         self.poop = Poop()
 
-
     def on_draw(self):
         arcade.start_render()
-
-        if self.snake.score <= 0 or  self.snake.center_x < 0 or self.snake.center_x > SCREEN_WIDTH or self.snake.center_y < 0 or self.snake.center_y > SCREEN_HEIGHT:
-            arcade.draw_text("Game Over!", (SCREEN_WIDTH // 4) - 40, SCREEN_HEIGHT // 2, arcade.color.RED, width = 400, font_size = 40, align = "left")
+        if self.snake.score < 0 or self.snake.center_x < 0 or self.snake.center_x > SCREEN_WIDTH or self.snake.center_y < 0 or self.snake.center_y > SCREEN_HEIGHT :
+            arcade.draw_text("Game Over!", (SCREEN_WIDTH // 4) - 20, SCREEN_HEIGHT // 2, arcade.color.WHITE, width = 400, font_size = 50, align = "left")
         else:
             self.snake.draw()
             self.apple.draw()
             self.pear.draw()
             self.poop.draw()
-            arcade.draw_text(f"Scores: {self.snake.score}", 5, SCREEN_HEIGHT - 20, arcade.color.BLACK, width = 100, font_size = 15, align = "left")
+            arcade.draw_text(f"Score: {self.snake.score}", 5, 10, arcade.color.BLACK, width = 100, font_size = 12, align = "left")
         
-
     def on_update(self, delta_time: float):
-        self.snake.move()
+        self.ai_snake()
 
         if arcade.check_for_collision(self.snake, self.apple):
             self.snake.eat("apple")
@@ -149,21 +134,37 @@ class Game(arcade.Window):
             self.snake.eat("poop")
             self.poop = Poop()
 
+    def ai_snake(self):
+        del_x = 0
+        del_y = 0
+        dh_pear = math.sqrt((self.snake.center_x - self.pear.center_x) ** 2 + (self.snake.center_y - self.pear.center_y) ** 2)
+        dh_apple = math.sqrt((self.snake.center_x - self.apple.center_x) ** 2 + (self.snake.center_y - self.apple.center_y) ** 2)
 
-    def on_key_release(self, key: int, modifiers: int):
-        if key == arcade.key.RIGHT:
+        del_x = self.pear.center_x
+        del_y = self.pear.center_y
+
+        if dh_apple < dh_pear:
+            del_x = self.apple.center_x
+            del_y = self.apple.center_y
+            
+        if  self.snake.center_x < del_x - 11:        #right
             self.snake.change_x = 1
             self.snake.change_y = 0
-        elif key == arcade.key.LEFT:
+        elif self.snake.center_x > del_x + 11:       #left
             self.snake.change_x = -1
             self.snake.change_y = 0
-        elif key == arcade.key.UP:
+        elif self.snake.center_y < del_y - 11:         #up
             self.snake.change_x = 0
             self.snake.change_y = 1
-        elif key == arcade.key.DOWN:
+        elif self.snake.center_y > del_y + 11:       #down
             self.snake.change_x = 0
             self.snake.change_y = -1
 
-    
-my_game = Game()
-arcade.run()
+        self.snake.move()
+
+def main() :
+    my_game = Game()
+    arcade.run()
+
+if __name__ == "__main__":
+    main()
