@@ -19,7 +19,7 @@ class Starship(arcade.Sprite):
         self.speed = 4
         self.bullet_list = []
         self.fire_sound = arcade.load_sound(":resources:sounds/laser4.wav")
-        self.healt_image = arcade.load_texture("as12.Infinity War/Health.jpg")
+        self.healt_image = arcade.load_texture("Health.jpg")
         
     def fire(self):
         self.bullet_list.append(Bullet(self))
@@ -53,7 +53,7 @@ class Bullet(arcade.Sprite):
 
 class Explosion(arcade.Sprite):
     def __init__(self, x, y, beg ):
-        super().__init__("as12.Infinity War/Explosion.jpg")
+        super().__init__("Explosion.jpg")
         self.width = 50
         self.height = 50
         self.center_x = x
@@ -65,8 +65,8 @@ class Game(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Fall of Reach")
         arcade.set_background_color(arcade.color.DARK_BLUE)
-        self.background_image = arcade.load_texture("as12.Infinity War/Background.jpg")
-        self.gameover_image = arcade.load_texture("as12.Infinity War\Game Over.jpg")
+        self.background_image = arcade.load_texture("Background.jpg")
+        self.gameover_image = arcade.load_texture("Game Over.jpg")
         self.gameover_sound = arcade.load_sound(":resources:sounds/gameover3.wav")
         self.me = Starship()
         self.enemy_list = []
